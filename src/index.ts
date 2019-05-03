@@ -31,3 +31,21 @@ const formatSequence = (sequence) => {
 };
 
 console.log(sequences(5));
+
+
+function pairdiffcount(arr, k) {
+	const set = new Set();
+	for (let i = 0; i < arr.length; i++) {
+		const currentLeft = arr[i];
+		for (let j = i + 1; j < arr.length; j++) {
+			const currentRight = arr[j];
+			if (Math.abs(currentLeft - currentRight) === k) {
+				let key = [currentLeft, currentRight].sort().toString();
+				set.add(key);
+			}
+		}
+	}
+	return set.size;
+}
+
+console.log(pairdiffcount([1, 5, 3, 4, 2], 3)); //2
