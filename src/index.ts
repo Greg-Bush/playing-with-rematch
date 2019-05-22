@@ -1,93 +1,62 @@
-const sequences = (n) => {
-	const numbersSequence = [];
-	const result = [];
-	for (let i = 1; i <= n; i++) {
-		numbersSequence.push(i);
-		result.push(formatSequence(numbersSequence));
-	}
-	return result;
-};
+const INPUT = [
+	['Mallory', 'Everest', 'Mont Blanc', 'Pillar Rock'],
+	['Mawson', 'South Pole', 'New Hebrides'],
+	['Hillary', 'Everest', 'South Pole'],
+];
 
-const formatSequence = (sequence) => {
-	if (sequence.length === 0) {
-		return;
+const OUTPUT = [
+	['Everest', 'Hillary', 'Mallory'],
+	['South Pole', 'Hillary', 'Mawson'],
+	['Mont Blanc', 'Mallory'],
+	['Pillar Rock', 'Mallory'],
+	['New Hebrides', 'Mawson'],
+];
+
+function done(explorers) {
+	'use strict';
+	if (!Array.isArray(explorers)) {
+		throw new Error('invalid "explorers" param format');
 	}
-	if (sequence.length % 2 === 0) {
-		let result = sequence[sequence.length - 1].toString();
-		for (let i = sequence.length - 2; i >= 0; i--) {
-			result += '-';
-			result += sequence[i];
-		}
+	if (explorers.length === 0) {
+		const result = [];
+		console.log(result);
 		return result;
 	}
-	{
-		let result = sequence[0].toString();
-		for (let i = 1; i < sequence.length; i++) {
-			result += '-';
-			result += sequence[i];
+	const toponymsMap = new Map();
+	for (let i = 0; i < explorers.length; i++) {
+		const line = explorers[i];
+		if (!Array.isArray(line)) {
+			throw new Error('invalid "explorers" param format');
 		}
-		return result;
-	}
-};
+		if (line.length < 2) {
+			continue;
+		}
 
-console.log(sequences(5));
-
-
-function pairdiffcount(arr, k) {
-	const set = new Set();
-	for (let i = 0; i < arr.length; i++) {
-		const currentLeft = arr[i];
-		for (let j = i + 1; j < arr.length; j++) {
-			const currentRight = arr[j];
-			if (Math.abs(currentLeft - currentRight) === k) {
-				let key = [currentLeft, currentRight].sort().toString();
-				set.add(key);
+		const explorer = line[0];
+		for (let j = 1; j < line.length; j++) {
+			const value = line[j];
+			let explorersSet = toponymsMap.get(value);
+			if (!explorersSet) {
+				explorersSet = new Set();
+				toponymsMap.set(value, explorersSet);
 			}
+			explorersSet.add(explorer);
 		}
 	}
-	return set.size;
+	const result = [];
+
+	toponymsMap.forEach((value, key) => {
+		const line = [key];
+
+		value.forEach((v) => {
+			line.push(v);
+		});
+
+		result.push(line);
+	});
+
+	console.log(result);
+	return result;
 }
 
-console.log(pairdiffcount([1, 5, 3, 4, 2], 3)); //2
-
-
-const OPENING_BRACKETS = ['{', '['];
-const BRACKETS_MAP = { '}': '{', ']': '[' };
-
-function checkBrackets(row: string) {
-	if (!Array.isArray(row)) {
-		throw new Error('invalid');
-	}
-	if (row.length === 0) return true;
-	const stack: string[] = [];
-	for (let i = 0; i < row.length; i++) {
-		const value = row[i];
-		if (isOpeningBracket(value)) {
-			stack.push(value);
-			continue;
-		} else if (!isClosingBracket(value)) {
-			continue;
-		} else if (isClosingBracket(value) && stack.pop() === BRACKETS_MAP[value]) {
-			continue;
-		} else {
-			return false;
-		}
-	}
-	return true;
-}
-
-function isClosingBracket(value: any) {
-	return Boolean(BRACKETS_MAP[value]);
-}
-
-function isOpeningBracket(value: any) {
-	for (let i = 0; i < OPENING_BRACKETS.length; i++) {
-		if (OPENING_BRACKETS[i] === value) {
-			return true;
-		}
-	}
-	return false;
-}
-
-
-checkBrackets('{[]}([}])[]');
+done(INPUT);
