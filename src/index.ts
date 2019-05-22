@@ -1,62 +1,63 @@
-const INPUT = [
-	['Mallory', 'Everest', 'Mont Blanc', 'Pillar Rock'],
-	['Mawson', 'South Pole', 'New Hebrides'],
-	['Hillary', 'Everest', 'South Pole'],
-];
-
-const OUTPUT = [
-	['Everest', 'Hillary', 'Mallory'],
-	['South Pole', 'Hillary', 'Mawson'],
-	['Mont Blanc', 'Mallory'],
-	['Pillar Rock', 'Mallory'],
-	['New Hebrides', 'Mawson'],
-];
-
-function done(explorers) {
-	'use strict';
-	if (!Array.isArray(explorers)) {
-		throw new Error('invalid "explorers" param format');
-	}
-	if (explorers.length === 0) {
-		const result = [];
-		console.log(result);
-		return result;
-	}
-	const toponymsMap = new Map();
-	for (let i = 0; i < explorers.length; i++) {
-		const line = explorers[i];
-		if (!Array.isArray(line)) {
-			throw new Error('invalid "explorers" param format');
-		}
-		if (line.length < 2) {
-			continue;
-		}
-
-		const explorer = line[0];
-		for (let j = 1; j < line.length; j++) {
-			const value = line[j];
-			let explorersSet = toponymsMap.get(value);
-			if (!explorersSet) {
-				explorersSet = new Set();
-				toponymsMap.set(value, explorersSet);
-			}
-			explorersSet.add(explorer);
-		}
-	}
-	const result = [];
-
-	toponymsMap.forEach((value, key) => {
-		const line = [key];
-
-		value.forEach((v) => {
-			line.push(v);
-		});
-
-		result.push(line);
-	});
-
-	console.log(result);
-	return result;
+interface Country {
+	code: string;
+	color: string | undefined;
 }
 
-done(INPUT);
+/**  
+ * @param {Country} startCountry  
+ * @param {Function} getNeightbors  
+ */
+module.exports = function (startCountry, getNeightbors) {
+	// Your code here.
+
+	const result = [];
+
+	const set = new Set();
+	set.add(startCountry.code);
+
+	if (typeof startCountry.color === 'undefined') {
+		result.push(startCountry.code);
+	}
+
+	const processPromisesArray = (promisesAccessors, index) => {
+		if (index < promisesAccessors.length) {
+			return promisesAccessors[index]().then(c => {
+				return processPromisesArray(promisesAccessors, index + 1);
+			});
+		}
+		return Promise.resolve(index);
+	};
+
+	const bypass = (counties) => {
+		if (!Array.isArray(counties)) {
+			return Promise.resolve();
+		}
+		const restCounties = [];
+		for (let i = 0; i < counties.length; i++) {
+			const country = counties[i];
+			if (set.has(country.code)) {
+				continue;
+			} else {
+				restCounties.push(country.code);
+				set.add(country.code);
+			}
+			if (typeof country.color === 'undefined') {
+				result.push(country.code);
+			}
+		}
+		const promises = restCounties.map(c => () => getNeightbors(c).then(neighbors =>
+			bypass(neighbors)));
+		return processPromisesArray(promises, 0);
+	};
+
+	const resultPromise = new Promise(resolve => {
+		getNeightbors(startCountry.code).then((neighbors) => {
+			bypass(neighbors).then(() => resolve(result));
+		});
+	});
+
+	return resultPromise;
+}
+
+
+
