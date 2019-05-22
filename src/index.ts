@@ -49,3 +49,45 @@ function pairdiffcount(arr, k) {
 }
 
 console.log(pairdiffcount([1, 5, 3, 4, 2], 3)); //2
+
+
+const OPENING_BRACKETS = ['{', '['];
+const BRACKETS_MAP = { '}': '{', ']': '[' };
+
+function checkBrackets(row: string) {
+	if (!Array.isArray(row)) {
+		throw new Error('invalid');
+	}
+	if (row.length === 0) return true;
+	const stack: string[] = [];
+	for (let i = 0; i < row.length; i++) {
+		const value = row[i];
+		if (isOpeningBracket(value)) {
+			stack.push(value);
+			continue;
+		} else if (!isClosingBracket(value)) {
+			continue;
+		} else if (isClosingBracket(value) && stack.pop() === BRACKETS_MAP[value]) {
+			continue;
+		} else {
+			return false;
+		}
+	}
+	return true;
+}
+
+function isClosingBracket(value: any) {
+	return Boolean(BRACKETS_MAP[value]);
+}
+
+function isOpeningBracket(value: any) {
+	for (let i = 0; i < OPENING_BRACKETS.length; i++) {
+		if (OPENING_BRACKETS[i] === value) {
+			return true;
+		}
+	}
+	return false;
+}
+
+
+checkBrackets('{[]}([}])[]');
