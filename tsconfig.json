@@ -1,17 +1,23 @@
 {
     "compilerOptions": {
-        "outDir": "./dist/",
+        "outDir": "dist",
         "sourceMap": true,
-        "module": "es6",
-        "target": "es2015",
+        "module": "esnext",
+        "target": "es5",
         "jsx": "react",
+        "lib": [
+            "dom",
+            "dom.iterable",
+            "esnext"
+        ],
         "allowJs": true,
         "plugins": [
             {
                 "name": "typescript-tslint-plugin",
                 "configFile": "tslint.json"
             }
-        ]
+        ],
+        "allowSyntheticDefaultImports": true
     },
     "exclude": [
         "node_modules"
