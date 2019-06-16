@@ -1,11 +1,18 @@
-interface ICity {
-    name: string;
-}
-export const city = {
-    state: null as ICity,
+import { ModelConfig, RematchDispatch } from '@rematch/core';
+import { RematchModels } from './index';
+import { fetchWeather } from '../api/index';
+
+export const weather: ModelConfig<any> = {
+    state: null,
     reducers: {
-        setCityName(state: ICity, name: string) {
-            return { ...state, name };
+        updateState(state, payload: any) {
+            return { ...state, ...payload };
         }
-    }
-}
+    },
+    effects: (dispatch: RematchDispatch<RematchModels>) => ({
+        async fetchAsync() {
+            const result = await fetchWeather();
+            dispatch.weather.updateState(result);
+        }
+    })
+};

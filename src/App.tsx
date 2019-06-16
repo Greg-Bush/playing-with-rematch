@@ -1,13 +1,12 @@
 import React from 'react';
-import { fetch } from './api/geolocation';
+import { Provider } from 'react-redux';
+import store from './rematch/index';
+import Weather from './components/Weather';
 
-const App: React.FC = () => {
-  fetch().then(r => console.log(r.city));
-  return (
-    <div>
-      <h1>Hello World!</h1>
-    </div>
-    );
-  }
-  
-  export default App;
+const App: React.FC = () => (
+  <Provider store={store}>
+      <Weather />
+  </Provider>
+);
+
+export default App;

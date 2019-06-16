@@ -1,0 +1,26 @@
+diff --git a/node_modules/react-open-weather-map/lib/index.js b/node_modules/react-open-weather-map/lib/index.js
+index 02bf278..b932abd 100644
+--- a/node_modules/react-open-weather-map/lib/index.js
++++ b/node_modules/react-open-weather-map/lib/index.js
+@@ -27,7 +27,7 @@ var OpenWeatherMap = function OpenWeatherMap(_ref) {
+   }
+ 
+   var day = _moment2.default.unix(data.dt);
+-  var src = '//openweathermap.org/img/w/' + data.weather[0].icon + '.png';
++  var src = 'http://openweathermap.org/img/w/' + data.weather[0].icon + '.png';
+ 
+   return _react2.default.createElement(
+     'div',
+diff --git a/node_modules/react-open-weather-map/src/OpenWeatherMap.js b/node_modules/react-open-weather-map/src/OpenWeatherMap.js
+index 357d72f..52651a5 100644
+--- a/node_modules/react-open-weather-map/src/OpenWeatherMap.js
++++ b/node_modules/react-open-weather-map/src/OpenWeatherMap.js
+@@ -10,7 +10,7 @@ const OpenWeatherMap = ({ data, config }) => {
+   }
+ 
+   const day = moment.unix(data.dt);
+-  const src = `//openweathermap.org/img/w/${data.weather[0].icon}.png`;
++  const src = `http://openweathermap.org/img/w/${data.weather[0].icon}.png`;
+ 
+   return (
+     <div className={config.containerClassName}>

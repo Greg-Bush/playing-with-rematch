@@ -3,6 +3,8 @@
         "outDir": "dist",
         "sourceMap": true,
         "module": "esnext",
+        "moduleResolution": "node",
+        "rootDirs": ["node_modules","./src", "node_modules/@types"],
         "target": "es5",
         "jsx": "react",
         "lib": [
@@ -18,8 +20,5 @@
             }
         ],
         "allowSyntheticDefaultImports": true
-    },
-    "exclude": [
-        "node_modules"
-    ]
+    }
 }
